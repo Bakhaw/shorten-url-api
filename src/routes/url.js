@@ -13,20 +13,27 @@ router.get("/shorten", async (req, res) => {
   const { url } = req.query;
 
   if (!url) {
-    res.send({
+    res.status(400).send({
       data: "Required query parameter is missing: url",
       error: true,
     });
   }
 
-  const { data } = await axios.get(
-    `${config.API_BASE_URL}/shorten/?url=${url}`
-  );
+  try {
+    const { data } = await axios.get(
+      `${config.API_BASE_URL}/shorten/?url=${url}`
+    );
 
-  res.send({
-    data,
-    error: false,
-  });
+    res.status(200).send({
+      data,
+      error: false,
+    });
+  } catch (error) {
+    res.status(400).send({
+      data: "Something went wrong",
+      error: true,
+    });
+  }
 });
 
 export default router;

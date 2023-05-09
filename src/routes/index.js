@@ -1,5 +1,7 @@
 import { Router } from "express";
 
+import urlRoutes from "./url";
+
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -9,5 +11,7 @@ router.get("/", (req, res) => {
 
   res.send(data);
 });
+
+router.use(urlRoutes);
 
 export default router;

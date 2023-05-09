@@ -1,5 +1,6 @@
 import { Router } from "express";
 import axios from "axios";
+import isUrl from "is-url";
 
 import config from "../config";
 
@@ -7,14 +8,21 @@ const router = Router();
 
 /**
  * Shorten URL
- * @property {string} req.query.url the URL you want to shorten
+ * @property {string} req.body.url the URL you want to shorten
  */
-router.get("/shorten", async (req, res) => {
-  const { url } = req.query;
+router.post("/shorturl", async (req, res) => {
+  const { url } = req.body;
 
   if (!url) {
     res.status(400).send({
-      data: "Required query parameter is missing: url",
+      data: "Required parameter missing in body: url",
+      error: true,
+    });
+  }
+
+  if (!isUrl(url)) {
+    res.status(400).send({
+      data: "The url parameter must be a valid URL",
       error: true,
     });
   }
@@ -25,12 +33,15 @@ router.get("/shorten", async (req, res) => {
     );
 
     res.status(200).send({
-      data,
+      data: {
+        originalUrl: url,
+        shortenUrl: data.result.full_short_link,
+      },
       error: false,
     });
   } catch (error) {
     res.status(400).send({
-      data: "Something went wrong",
+      data: error,
       error: true,
     });
   }

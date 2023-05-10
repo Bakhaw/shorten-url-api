@@ -24,7 +24,7 @@ router.post("/shorturl", async (req, res) => {
   if (!isUrl(url)) {
     return res.send({
       data: null,
-      error: "The url parameter must be a valid URL",
+      error: "L'url saisie est invalide",
       success: false,
     });
   }

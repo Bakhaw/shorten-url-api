@@ -14,16 +14,18 @@ router.post("/shorturl", async (req, res) => {
   const { url } = req.body;
 
   if (!url) {
-    res.status(400).send({
-      data: "Required parameter missing in body: url",
-      error: true,
+    return res.send({
+      data: null,
+      error: "Required parameter missing in body: url",
+      success: false,
     });
   }
 
   if (!isUrl(url)) {
-    res.status(400).send({
-      data: "The url parameter must be a valid URL",
-      error: true,
+    return res.send({
+      data: null,
+      error: "The url parameter must be a valid URL",
+      success: false,
     });
   }
 
@@ -32,17 +34,19 @@ router.post("/shorturl", async (req, res) => {
       `${config.API_BASE_URL}/shorten/?url=${url}`
     );
 
-    res.status(200).send({
+    res.send({
       data: {
         originalUrl: url,
         shortenUrl: data.result.full_short_link,
       },
-      error: false,
+      error: null,
+      success: true,
     });
   } catch (error) {
-    res.status(400).send({
-      data: error,
-      error: true,
+    res.send({
+      data: null,
+      error,
+      success: false,
     });
   }
 });
